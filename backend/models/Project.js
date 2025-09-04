@@ -1,3 +1,5 @@
+// collection şeması/şekillendirilmesi ve mongoose kurulumu buradan
+
 const mongoose = require("mongoose");
 
 // Proje modeli şeması

@@ -1,3 +1,5 @@
+// Veritabanı ile bağlantılı işlemler buradan yönetiliyor.
+
 const Project = require("../models/Project");
 
 async function getAllProjects(){return await Project.find();};

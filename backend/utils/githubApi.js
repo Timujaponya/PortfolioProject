@@ -1,5 +1,5 @@
 const axios = require("axios")
-const githubToken = process.env.GITHUB_TOKEN;
+const {githubToken} = require("../config/env.js");
 
 // GitHub request fonksiyonu
 async function getUserRepositories(user) {

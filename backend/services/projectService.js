@@ -1,3 +1,6 @@
+// işlem mantıkları CRUD operations ve benzeriler burada yönetiliyor
+
+
 const projectRepository = require("../repositories/projectRepository");
 const { getUserRepositories } = require("../utils/githubApi");
 

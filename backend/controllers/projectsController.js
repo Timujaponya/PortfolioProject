@@ -1,34 +1,34 @@
-require("dotenv").config();
+// Gelen ve giden isteklerin yönetildiği alan routelar vb. buradan.
+
+
 const projectService = require("../services/projectService");
 
 // GET /api/projects
-exports.getProjects = async(req,res) => {
+exports.getProjects = async(req, res, next) => {
     try{
         const result = await projectService.getProjects(); 
 
         res.status(200).json({message: "projects found",result});
     }catch(err){
-        console.log(err);
-        res.status(500).json({message:"Error occured"});
+        next(err)
     }
 };
 
 
 // POST /api/projects
-exports.postProject = async (req, res) => {
+exports.postProject = async (req, res, next) => {
     try {
         const project = await projectService.createProject(req.body);
         res.status(201).json({ message: "project added" , project});
     } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "server error" });
+        next(err)
     }
 };
 
 
 
 // PUT /api/projects/:id
-exports.putProject = async (req, res) => {
+exports.putProject = async (req, res, next) => {
   const updateId = req.params.id;
   const updateData = req.body;
 
@@ -40,13 +40,12 @@ exports.putProject = async (req, res) => {
 
     res.status(201).json({ message: "Data updated", updatedData });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Error occurred", error: err.message });
+        next(err)
   }
 };
 
 // PATCH /api/projects/:id
-exports.patchProject = async (req, res) => {
+exports.patchProject = async (req, res, next) => {
   const updateId = req.params.id;
   const updateData = req.body;
 
@@ -59,13 +58,12 @@ exports.patchProject = async (req, res) => {
 
     res.status(201).json({ message: "Data updated", updatedData });
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: "Error occurred", error: err.message });
+        next(err)
   }
 };
 
 // DELETE /api/projects/:id
-exports.deleteProject = async (req, res) =>{
+exports.deleteProject = async (req, res, next) =>{
     const deleteId = req.params.id;
     try{
         if(!deleteId){
@@ -74,14 +72,13 @@ exports.deleteProject = async (req, res) =>{
         const deletedData = await projectService.deleteProject(deleteId);
         res.status(201).json({message:"Data deleted successfully", deletedData});
     } catch(err){
-        console.log(err);
-        res.status(500).json("error has occured");
+        next(err)
     }
 };
 
 
 // GET /api/projects/:id
-exports.getProjectbyId = async(req,res)=>{
+exports.getProjectbyId = async(req, res, next)=>{
     const projectSearchId = req.params.id;
     try{
         if(!projectSearchId){
@@ -90,7 +87,6 @@ exports.getProjectbyId = async(req,res)=>{
         const result = await projectService.getProjectById(projectSearchId);
         res.status(200).json({message:"get request successfull", result});
     } catch(err){
-        console.log(err);
-        res.status(500).json("an error has occured");
+        next(err)
     }
 };

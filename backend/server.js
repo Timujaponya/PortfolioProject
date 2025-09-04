@@ -1,18 +1,10 @@
-require('dotenv').config();
-const express = require("express");
-const { connectDb } = require("./db.js"); // MongoDB bağlantısı
-const { errorHandler } = require("./middleware/errorHandler");
-const projectsRouter = require("./routes/projects.js");
-const { default: mongoose } = require('mongoose');
+// sunucu ve bağlantı ayarları ve sunucunun başlatılması buradan
 
 
+const { connectDb } = require("./config/db.js"); // MongoDB bağlantısı
+const app = require("./app.js");
 
-const app = express();
-const port = process.env.PORT || 3000;
-
-app.use(express.json()); // json middleware
-app.use("/api/projects", projectsRouter); // api/projects/router dahil etme
-app.use(errorHandler);
+const {port} = require("./config/env.js");
 
 // Async startServer ile DB bağlanıp server başlat
 async function startServer() {
