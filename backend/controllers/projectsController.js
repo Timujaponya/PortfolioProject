@@ -1,17 +1,12 @@
-const axios = require("axios");
-const Project = require("../models/Project");
 require("dotenv").config();
-const githubToken = process.env.GITHUB_TOKEN;
-const {getUserRepositories} = require('../utils/githubApi');
+const projectService = require("../services/projectService");
 
 // GET /api/projects
 exports.getProjects = async(req,res) => {
     try{
-        const projects = await Project.find();
+        const result = await projectService.getProjects(); 
 
-        const repositories = await getUserRepositories("Timujaponya");
-
-        res.status(200).json({message:"projects found", projects, repositories});
+        res.status(200).json({message: "projects found",result});
     }catch(err){
         console.log(err);
         res.status(500).json({message:"Error occured"});
@@ -19,25 +14,10 @@ exports.getProjects = async(req,res) => {
 };
 
 
-
-// // GET /api/projects
-// router.get("/", async (req, res) => {
-//     try {
-//         const repositories = await getUserRepositories("Timujaponya");
-//         res.status(200).json({ message: "user repos found", repositories });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ message: "server error" });
-//     }
-// });
-
-
 // POST /api/projects
 exports.postProject = async (req, res) => {
     try {
-        const project = req.body;
-
-        await Project.create(project);
+        const project = await projectService.createProject(req.body);
         res.status(201).json({ message: "project added" , project});
     } catch (err) {
         console.log(err);
@@ -53,8 +33,7 @@ exports.putProject = async (req, res) => {
   const updateData = req.body;
 
   try {
-    const updatedData = await Project.findByIdAndUpdate(updateId, updateData, { new: true, runValidators: true });
-
+    const updatedData = await projectService.updateProject(updateId, updateData);
     if (!updatedData) {
       return res.status(404).json({ message: "Project not found" });
     }
@@ -72,7 +51,7 @@ exports.patchProject = async (req, res) => {
   const updateData = req.body;
 
   try {
-    const updatedData = await Project.findByIdAndUpdate(updateId, updateData, { new: true, runValidators: true });
+    const updatedData = await projectService.updateProject(updateId, updateData);
 
     if (!updatedData) {
       return res.status(404).json({ message: "Project not found" });
@@ -92,7 +71,7 @@ exports.deleteProject = async (req, res) =>{
         if(!deleteId){
             return res.status(500).json({message:"cant find project (incorrect id)"});
         }
-        const deletedData = await Project.findByIdAndDelete(deleteId);
+        const deletedData = await projectService.deleteProject(deleteId);
         res.status(201).json({message:"Data deleted successfully", deletedData});
     } catch(err){
         console.log(err);
@@ -108,8 +87,8 @@ exports.getProjectbyId = async(req,res)=>{
         if(!projectSearchId){
             res.status(500).json("an error has occured (cant find project)");
         }
-        const getObject = await Project.findById(projectSearchId);
-        res.status(200).json({message:"get request successfull", getObject});
+        const result = await projectService.getProjectById(projectSearchId);
+        res.status(200).json({message:"get request successfull", result});
     } catch(err){
         console.log(err);
         res.status(500).json("an error has occured");
