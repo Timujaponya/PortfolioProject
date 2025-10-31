@@ -17,11 +17,6 @@ export const Router = () => {
     }
   });
 
-  const navigateTo = (route: 'home' | 'admin') => {
-    setCurrentRoute(route);
-    window.history.pushState({}, '', route === 'admin' ? SECRET_ADMIN_PATH : '/');
-  };
-
   return (
     <div>
       {currentRoute === 'home' ? <App /> : <AdminPanel />}
