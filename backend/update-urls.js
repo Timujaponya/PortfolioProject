@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Profile = require('./models/Profile');
 const Project = require('./models/Project');
 
-const BACKEND_URL = 'https://portfolioproject-gigt.onrender.com';
+const BACKEND_URL = 'https://timucindev.vercel.app';
 
 async function updateUrls() {
     try {

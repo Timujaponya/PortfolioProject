@@ -1,21 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middleware/upload');
+const { upload, uploadToBlob } = require('../middleware/uploadBlob');
 
 // POST /api/upload - Tek dosya yükleme (resim veya PDF)
-router.post('/', upload.single('file'), (req, res) => {
+router.post('/', upload.single('file'), uploadToBlob, (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'Dosya yüklenmedi!' });
     }
 
-    // Dosya URL'ini döndür
-    const fileUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+    // Vercel Blob URL'ini döndür
+    const fileUrl = req.file.blobUrl;
     
     res.status(200).json({
       message: 'Dosya başarıyla yüklendi',
       url: fileUrl,
-      filename: req.file.filename,
+      filename: req.file.originalname,
       size: req.file.size
     });
   } catch (err) {
@@ -24,7 +24,7 @@ router.post('/', upload.single('file'), (req, res) => {
 });
 
 // POST /api/upload/icon - Icon yükleme (SVG, PNG, JPG)
-router.post('/icon', upload.single('icon'), (req, res) => {
+router.post('/icon', upload.single('icon'), uploadToBlob, (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'Icon dosyası yüklenmedi!' });
@@ -33,19 +33,16 @@ router.post('/icon', upload.single('icon'), (req, res) => {
     // Dosya tipini kontrol et
     const allowedTypes = ['image/svg+xml', 'image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
     if (!allowedTypes.includes(req.file.mimetype)) {
-      // Dosyayı sil
-      const fs = require('fs');
-      fs.unlinkSync(req.file.path);
       return res.status(400).json({ message: 'Sadece SVG, PNG, JPG veya WebP dosyaları yükleyebilirsiniz!' });
     }
 
-    // Icon URL'ini döndür
-    const iconUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+    // Vercel Blob URL'ini döndür
+    const iconUrl = req.file.blobUrl;
     
     res.status(200).json({
       message: 'Icon başarıyla yüklendi',
       url: iconUrl,
-      filename: req.file.filename,
+      filename: req.file.originalname,
       size: req.file.size
     });
   } catch (err) {
@@ -53,20 +50,21 @@ router.post('/icon', upload.single('icon'), (req, res) => {
   }
 });
 
-// DELETE /api/upload/:filename - Dosya silme
-router.delete('/:filename', (req, res) => {
-  try {
-    const fs = require('fs');
-    const path = require('path');
-    const filename = req.params.filename;
-    const filePath = path.join(__dirname, '../uploads', filename);
 
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-      res.status(200).json({ message: 'Dosya silindi' });
-    } else {
-      res.status(404).json({ message: 'Dosya bulunamadı' });
+// DELETE /api/upload - Vercel Blob'dan dosya silme
+router.delete('/', async (req, res) => {
+  try {
+    const { url } = req.body;
+    
+    if (!url) {
+      return res.status(400).json({ message: 'Dosya URL\'si gerekli' });
     }
+
+    // Vercel Blob'dan sil
+    const { del } = require('@vercel/blob');
+    await del(url, { token: process.env.BLOB_READ_WRITE_TOKEN });
+    
+    res.status(200).json({ message: 'Dosya silindi' });
   } catch (err) {
     res.status(500).json({ message: 'Dosya silme hatası', error: err.message });
   }
