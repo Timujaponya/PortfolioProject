@@ -18,7 +18,7 @@ app.use(cors({
         "http://localhost:5174", 
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5174",
-        "portfolio sitesinin linki gelecek buraya"
+        "https://timucindev.netlify.app"
     ], // izin verilen originler
     credentials: true // cookie veya Authorization header göndermeye izin verir
 }))
