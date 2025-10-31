@@ -8,9 +8,11 @@
   publish = "dist"
 
 [build.environment]
-  NODE_VERSION = "18"
-  # Secrets scanning - sadece dokümantasyon ve example dosyalarını hariç tut
-  SECRETS_SCAN_OMIT_PATHS = "*.md,*.example,client/.env.example,backend/.env.example,.netlify/**"
+  NODE_VERSION = "20"
+  # Secrets scanning - dokümantasyon ve Vite build output'u hariç tut
+  SECRETS_SCAN_OMIT_PATHS = "*.md,*.example,client/.env.example,backend/.env.example,.netlify/**,dist/**"
+  # Vite environment variables bundle'a gömülür, normal davranış
+  SECRETS_SCAN_OMIT_KEYS = "VITE_API_URL,VITE_ADMIN_PASSWORD,VITE_ADMIN_PATH"
 
 # SPA routing için - tüm route'ları index.html'e yönlendir
 [[redirects]]
