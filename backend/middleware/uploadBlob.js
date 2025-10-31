@@ -36,17 +36,30 @@ const uploadToBlob = async (req, res, next) => {
   }
 
   try {
+    const token = process.env.BLOB_READ_WRITE_TOKEN;
+    
+    // Debug: Token var mı kontrol et
+    if (!token) {
+      console.error('❌ BLOB_READ_WRITE_TOKEN not found in environment variables');
+      console.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('BLOB')));
+      throw new Error('BLOB_READ_WRITE_TOKEN environment variable is not set');
+    }
+
     // Benzersiz dosya adı oluştur
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(req.file.originalname);
     const name = path.basename(req.file.originalname, ext).replace(/\s+/g, '-');
     const filename = `${name}-${uniqueSuffix}${ext}`;
 
+    console.log('📤 Uploading to Vercel Blob:', filename);
+
     // Vercel Blob'a yükle
     const blob = await put(filename, req.file.buffer, {
       access: 'public',
-      token: process.env.BLOB_READ_WRITE_TOKEN,
+      token: token,
     });
+
+    console.log('✅ Upload successful:', blob.url);
 
     // req.file'ı güncelle - path yerine Blob URL
     req.file.path = blob.url;
@@ -54,7 +67,7 @@ const uploadToBlob = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error('Blob upload error:', error);
+    console.error('❌ Blob upload error:', error.message);
     next(error);
   }
 };
