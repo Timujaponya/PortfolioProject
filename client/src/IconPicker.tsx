@@ -179,7 +179,7 @@ const IconPicker = ({ value, onChange, label = 'Icon Seç', allowCustomUpload = 
     // Custom uploaded icon ise
     if (iconName.startsWith('custom:')) {
       const iconUrl = iconName.replace('custom:', '');
-      return <img src={iconUrl} alt="custom icon" style={{ width: '20px', height: '20px', objectFit: 'contain' }} />;
+      return <img src={iconUrl} alt="custom icon" style={{ width: '24px', height: '24px', objectFit: 'contain' }} />;
     }
     
     const icon = allIcons[iconName];
@@ -200,10 +200,10 @@ const IconPicker = ({ value, onChange, label = 'Icon Seç', allowCustomUpload = 
       <label>{label}</label>
       
       <div className="icon-picker-display" onClick={() => setIsOpen(!isOpen)}>
-        {value && allIcons[value] ? (
+        {value ? (
           <div className="selected-icon">
             {renderIcon(value)}
-            <span>{value}</span>
+            <span>{value.startsWith('custom:') ? 'Custom Icon' : value}</span>
           </div>
         ) : (
           <span className="placeholder">Icon Seç...</span>

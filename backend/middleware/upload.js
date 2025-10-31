@@ -22,18 +22,18 @@ const storage = multer.diskStorage({
   }
 });
 
-// Dosya filtresi - resim ve PDF dosyaları
+// Dosya filtresi - resim, SVG ve PDF dosyaları
 const fileFilter = (req, file, cb) => {
-  const allowedImageTypes = /jpeg|jpg|png|gif|webp/;
+  const allowedImageTypes = /jpeg|jpg|png|gif|webp|svg/;
   const allowedDocTypes = /pdf/;
   const extname = path.extname(file.originalname).toLowerCase();
-  const isImage = allowedImageTypes.test(extname) && allowedImageTypes.test(file.mimetype);
+  const isImage = allowedImageTypes.test(extname) && (allowedImageTypes.test(file.mimetype) || file.mimetype === 'image/svg+xml');
   const isPDF = allowedDocTypes.test(extname) && file.mimetype === 'application/pdf';
 
   if (isImage || isPDF) {
     return cb(null, true);
   } else {
-    cb(new Error('Sadece resim (jpeg, jpg, png, gif, webp) veya PDF dosyaları yüklenebilir!'));
+    cb(new Error('Sadece resim (jpeg, jpg, png, gif, webp, svg) veya PDF dosyaları yüklenebilir!'));
   }
 };
 
