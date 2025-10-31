@@ -1,6 +1,9 @@
 // Vercel Serverless Function wrapper for Express backend
-const app = require('../backend/app');
-const { connectDb } = require('../backend/config/db');
+const path = require('path');
+
+// Backend modüllerini yükle
+const app = require(path.join(process.cwd(), 'backend', 'app'));
+const { connectDb } = require(path.join(process.cwd(), 'backend', 'config', 'db'));
 
 // MongoDB bağlantısını kur (singleton pattern)
 let isConnected = false;
