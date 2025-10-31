@@ -9,6 +9,8 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  # Secrets scanning - sadece dokümantasyon ve example dosyalarını hariç tut
+  SECRETS_SCAN_OMIT_PATHS = "*.md,*.example,client/.env.example,backend/.env.example,.netlify/**"
 
 # SPA routing için - tüm route'ları index.html'e yönlendir
 [[redirects]]
