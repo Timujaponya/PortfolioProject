@@ -5,7 +5,7 @@
   # Client klasöründen build yap
   base = "client"
   command = "npm run build"
-  publish = "client/dist"
+  publish = "dist"
 
 [build.environment]
   NODE_VERSION = "18"
