@@ -4,11 +4,23 @@ const mongoose = require("mongoose");
 
 // Proje modeli şeması
 const projectSchema = new mongoose.Schema({
-    title:{type:String, required:true},
+    title: { type: String, required: true },
     description: String,
+    tags: [String],
+    category: { 
+        type: String, 
+        enum: ['web', 'game', 'tools'], 
+        default: 'web' 
+    },
+    categoryIcon: String, // Kategori için özel icon
+    icon: String, // Proje icon'u
     link: String,
-    createdAt: {type:Date, default:Date.now},
-    updatedAt: {type:Date, default:Date.now}
+    githubUrl: String,
+    imageUrl: String,
+    order: { type: Number, default: 0 },
+    isActive: { type: Boolean, default: true },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
 });
 
 

@@ -5,11 +5,21 @@ const projectRepository = require("../repositories/projectRepository");
 const { getUserRepositories } = require("../utils/githubApi");
 
 async function getProjects(){
-    const [dbProjects, githubRepositories] = await Promise.all([
-        projectRepository.getAllProjects(),
-        getUserRepositories("Timujaponya"),
-    ]);
-    return {dbProjects, githubRepositories};
+    try {
+        const [dbProjects, githubRepositories] = await Promise.all([
+            projectRepository.getAllProjects(),
+            getUserRepositories("Timujaponya").catch(err => {
+                console.error("GitHub API Error:", err.message);
+                return []; // GitHub hatası durumunda boş array döndür
+            }),
+        ]);
+        return {dbProjects, githubRepositories};
+    } catch (error) {
+        console.error("Error in getProjects:", error);
+        // En azından DB projelerini döndür
+        const dbProjects = await projectRepository.getAllProjects();
+        return {dbProjects, githubRepositories: []};
+    }
 }
 
 async function createProject(data){

@@ -1,0 +1,19 @@
+{
+  "name": "portfolio-project",
+  "version": "1.0.0",
+  "description": "Full-stack portfolio project with admin panel",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../client && npm install",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm start",
+    "client": "cd client && npm run dev",
+    "seed": "cd backend && npm run seed",
+    "start": "npm run dev"
+  },
+  "keywords": ["portfolio", "react", "node", "mongodb"],
+  "author": "Timucin",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
