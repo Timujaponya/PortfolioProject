@@ -158,11 +158,3 @@ npm run dev
 - **Text**: #e5e5e5
 - **Secondary Text**: #a0a0a0
 
-## 📞 Destek
-
-Daha fazla bilgi için `ADMIN_GUIDE.md` dosyasına bakın.
-
----
-
-Hazırlayan: GitHub Copilot 🤖
-Tarih: 26 Ekim 2025
